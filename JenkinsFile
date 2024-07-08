@@ -2,44 +2,60 @@ pipeline {
     agent any
 
     environment {
+        REPO_URL = 'https://github.com/sushanth2901/aws_iam_roles_policies.git'
+        BRANCH = 'main'  
+        VENV_DIR = 'venv'
+        WORKSPACE_DIR = 'dir' 
         AWS_ACCESS_KEY_ID = credentials('AKIATCKASBIYVOGAOOLQ')  // Replace with your Jenkins credential ID
         AWS_SECRET_ACCESS_KEY = credentials('3NNKpt4Es8xZa36aGUavpjOBIFuma//u1n3cR7B0')  // Replace with your Jenkins credential ID
         AWS_DEFAULT_REGION = 'us-east-1'  // Adjust to your preferred region
     }
 
     stages {
+        stage('git_clone'){
+            steps {
+                sh "git clone -b ${BRANCH} ${REPO_URL} ${WORKSPACE_DIR}"
+            }
+        }
         stage('Install Boto3') {
             steps {
                 sh 'pip install boto3'
             }
         }
 
+
         stage('IAM Operations') {
             steps {
                 script {
                     if (params.IAM_OPERATION == "create_policy") {
                         sh """
-                            python3 create_policy.py ${params.POLICY_NAME}
+                            cd dir
+                            python3 dir/create_policy.py ${params.POLICY_NAME}
                         """
                     } else if (params.IAM_OPERATION == "create_role") {
                         sh """
-                            python3 create_role.py ${params.ROLE_NAME}
+                             cd dir
+                            python3 dir/create_role.py ${params.ROLE_NAME}
                         """
                     } else if (params.IAM_OPERATION == "delete_policy") {
                         sh """
-                            python3 delete_policy.py ${params.POLICY_ARN}
+                            cd dir
+                            python3 dir/delete_policy.py ${params.POLICY_ARN}
                         """
                     } else if (params.IAM_OPERATION == "delete_role") {
                         sh """
-                            python3 delete_role.py ${params.ROLE_NAME}
+                             cd dir
+                            python3 dir/delete_role.py ${params.ROLE_NAME}
                         """
                     } else if (params.IAM_OPERATION == "attach_policy_to_role") {
                         sh """
-                            python3 attach_policy_to_role.py ${params.ROLE_NAME} ${params.POLICY_ARN}
+                            cd dir
+                            python3 dir/attach_policy_to_role.py ${params.ROLE_NAME} ${params.POLICY_ARN}
                         """
                     } else if (params.IAM_OPERATION == "detach_policy_from_role") {
                         sh """
-                            python3 detach_policy_from_role.py ${params.ROLE_NAME} ${params.POLICY_ARN}
+                            cd dir
+                            python3 dir/detach_policy_from_role.py ${params.ROLE_NAME} ${params.POLICY_ARN}
                         """
                     } else {
                         error("Invalid operation specified")

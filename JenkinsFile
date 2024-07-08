@@ -50,15 +50,15 @@ pipeline {
                     if (params.IAM_OPERATION == "create_policy") {
                         cmd = "python3 create_policy.py ${params.POLICY_NAME}"
                     } else if (params.IAM_OPERATION == "create_role") {
-                        cmd = "python3 ${WORKSPACE_DIR}/create_role.py ${params.ROLE_NAME}"
+                        cmd = "python3 create_role.py ${params.ROLE_NAME}"
                     } else if (params.IAM_OPERATION == "delete_policy") {
-                        cmd = "python3 ${WORKSPACE_DIR}/delete_policy.py ${params.POLICY_ARN}"
+                        cmd = "python3 delete_policy.py ${params.POLICY_ARN}"
                     } else if (params.IAM_OPERATION == "delete_role") {
-                        cmd = "python3 ${WORKSPACE_DIR}/delete_role.py ${params.ROLE_NAME}"
+                        cmd = "python3 delete_role.py ${params.ROLE_NAME}"
                     } else if (params.IAM_OPERATION == "attach_policy_to_role") {
-                        cmd = "python3 ${WORKSPACE_DIR}/attach_policy_to_role.py ${params.ROLE_NAME} ${params.POLICY_ARN}"
+                        cmd = "python3 attach_policy_to_role.py ${params.ROLE_NAME} ${params.POLICY_ARN}"
                     } else if (params.IAM_OPERATION == "detach_policy_from_role") {
-                        cmd = "python3 ${WORKSPACE_DIR}/detach_policy_from_role.py ${params.ROLE_NAME} ${params.POLICY_ARN}"
+                        cmd = "python3 detach_policy_from_role.py ${params.ROLE_NAME} ${params.POLICY_ARN}"
                     } else {
                         error("Invalid operation specified")
                     }

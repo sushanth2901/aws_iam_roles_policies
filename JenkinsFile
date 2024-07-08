@@ -9,14 +9,7 @@ pipeline {
     }
 
     stages {
-        stage('Clone Repository') {
-            steps {
-                script {
-                    // Clone the repository
-                    sh "git clone -b ${BRANCH} ${REPO_URL} ${WORKSPACE_DIR}"
-                }
-            }
-        }
+        
 
         stage('Install Python3 and Boto3') {
             steps {

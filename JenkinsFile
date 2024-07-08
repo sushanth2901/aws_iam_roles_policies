@@ -1,0 +1,74 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_ACCESS_KEY_ID = credentials('AKIATCKASBIYVOGAOOLQ')  // Replace with your Jenkins credential ID
+        AWS_SECRET_ACCESS_KEY = credentials('3NNKpt4Es8xZa36aGUavpjOBIFuma//u1n3cR7B0')  // Replace with your Jenkins credential ID
+        AWS_DEFAULT_REGION = 'us-east-1'  // Adjust to your preferred region
+    }
+
+    stages {
+        stage('Install Boto3') {
+            steps {
+                sh 'pip install boto3'
+            }
+        }
+
+        stage('IAM Operations') {
+            steps {
+                script {
+                    if (params.IAM_OPERATION == "create_policy") {
+                        sh """
+                            python3 scripts/create_policy.py ${params.POLICY_NAME}
+                        """
+                    } else if (params.IAM_OPERATION == "create_role") {
+                        sh """
+                            python3 scripts/create_role.py ${params.ROLE_NAME}
+                        """
+                    } else if (params.IAM_OPERATION == "delete_policy") {
+                        sh """
+                            python3 scripts/delete_policy.py ${params.POLICY_ARN}
+                        """
+                    } else if (params.IAM_OPERATION == "delete_role") {
+                        sh """
+                            python3 scripts/delete_role.py ${params.ROLE_NAME}
+                        """
+                    } else if (params.IAM_OPERATION == "attach_policy_to_role") {
+                        sh """
+                            python3 scripts/attach_policy_to_role.py ${params.ROLE_NAME} ${params.POLICY_ARN}
+                        """
+                    } else if (params.IAM_OPERATION == "detach_policy_from_role") {
+                        sh """
+                            python3 scripts/detach_policy_from_role.py ${params.ROLE_NAME} ${params.POLICY_ARN}
+                        """
+                    } else {
+                        error("Invalid operation specified")
+                    }
+                }
+            }
+        }
+    }
+
+    parameters {
+        choice(
+            name: 'IAM_OPERATION',
+            choices: ['create_policy', 'create_role', 'delete_policy', 'delete_role', 'attach_policy_to_role', 'detach_policy_from_role'],
+            description: 'Select the IAM operation to perform'
+        )
+        string(
+            name: 'ROLE_NAME',
+            defaultValue: 'ExampleRole',
+            description: 'Name of the IAM role'
+        )
+        string(
+            name: 'POLICY_NAME',
+            defaultValue: 'ExamplePolicy',
+            description: 'Name of the IAM policy'
+        )
+        string(
+            name: 'POLICY_ARN',
+            defaultValue: '',
+            description: 'ARN of the IAM policy'
+        )
+    }
+}

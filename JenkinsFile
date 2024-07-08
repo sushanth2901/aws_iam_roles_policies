@@ -4,7 +4,7 @@ pipeline {
     environment {
         REPO_URL = 'https://github.com/sushanth2901/aws_iam_roles_policies.git'
         BRANCH = 'main'
-        WORKSPACE_DIR = 'test1'
+        WORKSPACE_DIR = 'test2'
         AWS_DEFAULT_REGION = 'us-east-1'  // Adjust to your preferred region
     }
 
@@ -31,6 +31,16 @@ pipeline {
                 }
             }
         }
+        stage('Debug') {
+            steps {
+                sh "ls -la ${WORKSPACE_DIR}"
+                sh ''' 
+                    cd ${WORKSPACE_DIR}
+                    ls -lt
+                        '''
+            }
+        }
+
 
         stage('IAM Operations') {
             steps {
@@ -38,7 +48,7 @@ pipeline {
                     // Perform the selected IAM operation
                     def cmd
                     if (params.IAM_OPERATION == "create_policy") {
-                        cmd = "python3 ${WORKSPACE_DIR}/create_policy.py ${params.POLICY_NAME}"
+                        cmd = "python3 create_policy.py ${params.POLICY_NAME}"
                     } else if (params.IAM_OPERATION == "create_role") {
                         cmd = "python3 ${WORKSPACE_DIR}/create_role.py ${params.ROLE_NAME}"
                     } else if (params.IAM_OPERATION == "delete_policy") {

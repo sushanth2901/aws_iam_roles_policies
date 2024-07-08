@@ -19,27 +19,27 @@ pipeline {
                 script {
                     if (params.IAM_OPERATION == "create_policy") {
                         sh """
-                            python3 scripts/create_policy.py ${params.POLICY_NAME}
+                            python3 create_policy.py ${params.POLICY_NAME}
                         """
                     } else if (params.IAM_OPERATION == "create_role") {
                         sh """
-                            python3 scripts/create_role.py ${params.ROLE_NAME}
+                            python3 create_role.py ${params.ROLE_NAME}
                         """
                     } else if (params.IAM_OPERATION == "delete_policy") {
                         sh """
-                            python3 scripts/delete_policy.py ${params.POLICY_ARN}
+                            python3 delete_policy.py ${params.POLICY_ARN}
                         """
                     } else if (params.IAM_OPERATION == "delete_role") {
                         sh """
-                            python3 scripts/delete_role.py ${params.ROLE_NAME}
+                            python3 delete_role.py ${params.ROLE_NAME}
                         """
                     } else if (params.IAM_OPERATION == "attach_policy_to_role") {
                         sh """
-                            python3 scripts/attach_policy_to_role.py ${params.ROLE_NAME} ${params.POLICY_ARN}
+                            python3 attach_policy_to_role.py ${params.ROLE_NAME} ${params.POLICY_ARN}
                         """
                     } else if (params.IAM_OPERATION == "detach_policy_from_role") {
                         sh """
-                            python3 scripts/detach_policy_from_role.py ${params.ROLE_NAME} ${params.POLICY_ARN}
+                            python3 detach_policy_from_role.py ${params.ROLE_NAME} ${params.POLICY_ARN}
                         """
                     } else {
                         error("Invalid operation specified")

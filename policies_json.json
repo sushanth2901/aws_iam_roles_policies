@@ -1,1 +1,43 @@
-
+{
+  "policies": [
+    {
+      "PolicyName": "Policy1",
+      "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": "*",
+            "Resource": "*"
+          }
+        ]
+      }
+    },
+    {
+      "PolicyName": "Policy2",
+      "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": "s3:*",
+            "Resource": "*"
+          }
+        ]
+      }
+    },
+    {
+      "PolicyName": "Policy3",
+      "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": "ec2:*",
+            "Resource": "*"
+          }
+        ]
+      }
+    }
+  ]
+}

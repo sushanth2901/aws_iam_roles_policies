@@ -1,7 +1,6 @@
 {
   "policies": [
     {
-      "PolicyName": "Policy1",
       "PolicyDocument": {
         "Version": "2012-10-17",
         "Statement": [
@@ -14,7 +13,6 @@
       }
     },
     {
-      "PolicyName": "Policy2",
       "PolicyDocument": {
         "Version": "2012-10-17",
         "Statement": [
@@ -27,7 +25,6 @@
       }
     },
     {
-      "PolicyName": "Policy3",
       "PolicyDocument": {
         "Version": "2012-10-17",
         "Statement": [
@@ -38,6 +35,3 @@
           }
         ]
       }
-    }
-  ]
-}

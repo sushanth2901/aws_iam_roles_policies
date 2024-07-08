@@ -10,7 +10,28 @@ pipeline {
 
     stages {
 
-        
+         stage('Clone Repository') {
+            steps {
+                script {
+                    // Clone the repository
+                    sh "git clone -b ${BRANCH} ${REPO_URL} ${WORKSPACE_DIR}"
+                }
+            }
+        }
+
+        stage('Install Python3 and Boto3') {
+            steps {
+                script {
+                    // Ensure Python3 and pip are installed
+                    sh '''
+                        sudo apt-get update
+                        sudo apt-get install -y python3 python3-pip
+                    '''
+                    // Install Boto3
+                    sh 'pip3 install boto3'
+                }
+            }
+        }
 
 
         stage('IAM Operations') {

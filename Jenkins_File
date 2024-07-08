@@ -1,0 +1,100 @@
+pipeline {
+    agent any
+
+    environment {
+        REPO_URL = 'https://github.com/sushanth2901/aws_iam_roles_policies.git'
+        BRANCH = 'main'
+        WORKSPACE_DIR = 'test_2901'
+        AWS_DEFAULT_REGION = 'us-east-1'  // Adjust to your preferred region
+    }
+
+    stages {
+ stage('Clone Repository') {
+            steps {
+                script {
+                    // Clone the repository
+                    sh "git clone -b ${BRANCH} ${REPO_URL} ${WORKSPACE_DIR}"
+                }
+            }
+        }
+
+        stage('Install Python3 and Boto3') {
+            steps {
+                script {
+                    // Ensure Python3 and pip are installed
+                    sh '''
+                        sudo apt-get update
+                        sudo apt-get install -y python3 python3-pip
+                    '''
+                    // Install Boto3
+                    sh 'pip3 install boto3'
+                }
+            }
+        }
+    
+
+
+        stage('IAM Operations') {
+            steps {
+                script {
+                    // Perform the selected IAM operation
+                    def cmd
+                    if (params.IAM_OPERATION == "create_policy") {
+                        cmd = "python3 operations.py create_policy ${params.POLICY_NAME}"
+                    } else if (params.IAM_OPERATION == "create_role") {
+                        cmd = "python3 operations.py create_role ${params.ROLE_NAME}"
+                    } else if (params.IAM_OPERATION == "delete_policy") {
+                        cmd = "python3 operations.py delete_policy ${params.POLICY_ARN}"
+                    } else if (params.IAM_OPERATION == "delete_role") {
+                        cmd = "python3 operations.py delete_role ${params.ROLE_NAME}"
+                    } else if (params.IAM_OPERATION == "attach_policy_to_role") {
+                        cmd = "python3 operations.py attach_policy_to_role ${params.ROLE_NAME} ${params.POLICY_ARN}"
+                    } else if (params.IAM_OPERATION == "detach_policy_from_role") {
+                        cmd = "python3 operations.py detach_policy_from_role ${params.ROLE_NAME} ${params.POLICY_ARN}"
+                    } else {
+                        error("Invalid operation specified")
+                    }
+                    
+                    // Use withCredentials to securely set AWS credentials
+                    withCredentials([[
+                        $class: 'AmazonWebServicesCredentialsBinding',
+                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
+                        credentialsId: 'aws-credentials'
+                    ]]) {
+                        sh """
+                            export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+                            export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+                            export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+                            cd ${WORKSPACE_DIR}
+                            ${cmd}
+                        """
+                    }
+                }
+            }
+        }
+    }
+
+    parameters {
+        choice(
+            name: 'IAM_OPERATION',
+            choices: ['create_policy', 'create_role', 'delete_policy', 'delete_role', 'attach_policy_to_role', 'detach_policy_from_role'],
+            description: 'Select the IAM operation to perform'
+        )
+        string(
+            name: 'ROLE_NAME',
+            defaultValue: 'ExampleRole',
+            description: 'Name of the IAM role'
+        )
+        string(
+            name: 'POLICY_NAME',
+            defaultValue: 'ExamplePolicy',
+            description: 'Name of the IAM policy'
+        )
+        string(
+            name: 'POLICY_ARN',
+            defaultValue: '',
+            description: 'ARN of the IAM policy'
+        )
+    }
+}

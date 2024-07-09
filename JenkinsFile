@@ -45,7 +45,6 @@ pipeline {
                     } else if (params.IAM_OPERATION == "create_role") {
                         def roleNames = params.ROLE_NAMES.split(',')
                         cmd = "python3 create_roles.py ${roleNames.join(' ')} roles_json.json"
-                        cmd = "python3 create_role.py ${params.ROLE_NAME}"
                     } else if (params.IAM_OPERATION == "delete_policy") {
                         cmd = "python3 delete_policy.py ${params.POLICY_ARN}"
                     } else if (params.IAM_OPERATION == "delete_role") {

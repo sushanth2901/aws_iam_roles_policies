@@ -94,12 +94,12 @@ def detach_policy_from_role(role_name, policy_arn):
 if __name__ == "__main__":
     operation = sys.argv[1]
     if operation == "create_policy":
-        policy_names = sys.argv[1:-1]
+        policy_names = sys.argv[2:-1]
         policies_file = sys.argv[-1]
         create_policies_from_file(policy_names, policies_file)
         
     elif operation == "create_role":
-        role_names = sys.argv[1:-1]
+        role_names = sys.argv[2:-1]
         roles_file = sys.argv[-1]
         create_policies_from_file(policy_names, policies_file)
 

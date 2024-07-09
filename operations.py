@@ -71,14 +71,15 @@ def delete_role(role_name):
     print(f"Role {role_name} deleted successfully.")
     print(response)
 
-def attach_policy_to_role(role_name, policy_arn):
+def attach_policy_to_role(role_name, policy_arns):
     client = boto3.client('iam')
-    response = client.attach_role_policy(
-        RoleName=role_name,
-        PolicyArn=policy_arn
-    )
-    print(f"Policy {policy_arn} attached to role {role_name}.")
-    print(response)
+    for policy_arn in policy_arns:
+        response = client.attach_role_policy(
+            RoleName=role_name,
+            PolicyArn=policy_arn
+        )
+        print(f"Policy {policy_arn} attached to role {role_name}.")
+        print(response)
 
 def detach_policy_from_role(role_name, policy_arn):
     client = boto3.client('iam')
@@ -94,10 +95,12 @@ if __name__ == "__main__":
     if operation == "create_policy":
         policy_names = sys.argv[1:-1]
         policies_file = sys.argv[-1]
+        create_policies_file(policy_names, policies_file)
         
     elif operation == "create_role":
         role_names = sys.argv[1:-1]
         roles_file = sys.argv[-1]
+        create_roles_from_file(role_names, roles_file)
 
     elif operation == "delete_policy":
         policy_arn = sys.argv[2]
@@ -109,8 +112,8 @@ if __name__ == "__main__":
 
     elif operation == "attach_policy_to_role":
         role_name = sys.argv[2]
-        policy_arn = sys.argv[3]
-        attach_policy_to_role(role_name, policy_arn)
+        policy_arns = sys.argv[3]
+        attach_policy_to_role(role_name, policy_arns)
 
     elif operation == "detach_policy_from_role":
         role_name = sys.argv[2]

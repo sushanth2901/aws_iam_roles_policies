@@ -45,14 +45,14 @@ pipeline {
                     } else if (params.IAM_OPERATION == "create_role") {
                         def roleNames = params.ROLE_NAMES.split(',')
                         cmd = "python3 create_roles.py ${roleNames.join(' ')} roles_json.json"
-
                         cmd = "python3 create_role.py ${params.ROLE_NAME}"
                     } else if (params.IAM_OPERATION == "delete_policy") {
                         cmd = "python3 delete_policy.py ${params.POLICY_ARN}"
                     } else if (params.IAM_OPERATION == "delete_role") {
                         cmd = "python3 delete_role.py ${params.ROLE_NAME}"
                     } else if (params.IAM_OPERATION == "attach_policy_to_role") {
-                        cmd = "python3 attach_policy_to_role.py ${params.ROLE_NAME} ${params.POLICY_ARN}"
+                        def policyArns = params.POLICY_ARNS.split(',')
+                        cmd = "python3 attach_policies_to_role.py ${params.ROLE_NAME} ${policyArns.join(' ')}"
                     } else if (params.IAM_OPERATION == "detach_policy_from_role") {
                         cmd = "python3 detach_policy_from_role.py ${params.ROLE_NAME} ${params.POLICY_ARN}"
                     } else {

@@ -18,13 +18,15 @@ def create_policies_from_file(policy_names, policies_file):
     with open(policies_file, 'r') as file:
         policies_data = json.load(file)
     
-    # Check if the number of policy names matches the number of policy documents
-    if len(policy_names) != len(policies_data['policies']):
-        raise ValueError("The number of policy names does not match the number of policy documents.")
+    # Create a dictionary to map policy names to their documents
+    policy_map = {policy['PolicyName']: policy['PolicyDocument'] for policy in policies_data['policies']}
     
-    # Iterate through the list of policy documents and create each policy with the given names
-    for policy_name, policy in zip(policy_names, policies_data['policies']):
-        create_policy(policy_name, policy['PolicyDocument'])
+    # Iterate through the list of policy names and create each policy with the corresponding document
+    for policy_name in policy_names:
+        if policy_name in policy_map:
+            create_policy(policy_name, policy_map[policy_name])
+        else:
+            print(f"Policy name {policy_name} not found in the policies file.")
 
 # Get policy names from command-line arguments
 if __name__ == "__main__":

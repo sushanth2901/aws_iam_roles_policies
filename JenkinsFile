@@ -42,7 +42,7 @@ pipeline {
                     if (params.IAM_OPERATION == "create_policy") {
                           if (params.POLICY_NAMES) {
                             def policyNames = params.POLICY_NAMES.split(',')
-                            cmd = "python3 operations.py create_policy ${policyNames.join(' ')} policies.json"
+                            cmd = "python3 operations.py create_policy ${policyNames.join(' ')} policies_json.json"
                         } else {
                             error("POLICY_NAMES parameter is required for create_policy operation")
                         }

@@ -51,14 +51,14 @@ pipeline {
                         def roleNames = params.ROLE_NAMES.split(',')
                         cmd = "python3 create_roles.py ${roleNames.join(' ')} roles_json.json"
                     } else if (params.IAM_OPERATION == "delete_policy") {
-                        cmd = "python3 delete_policy.py ${params.POLICY_ARN}"
+                        cmd = "python3 delete_policy.py ${params.POLICY_ARNS}"
                     } else if (params.IAM_OPERATION == "delete_role") {
-                        cmd = "python3 delete_role.py ${params.ROLE_NAME}"
+                        cmd = "python3 delete_role.py ${params.ROLE_NAMES}"
                     } else if (params.IAM_OPERATION == "attach_policy_to_role") {
                         def policyArns = params.POLICY_ARNS.split(',')
-                        cmd = "python3 attach_policies_to_role.py ${params.ROLE_NAME} ${policyArns.join(' ')}"
+                        cmd = "python3 attach_policies_to_role.py ${params.ROLE_NAMES} ${policyArns.join(' ')}"
                     } else if (params.IAM_OPERATION == "detach_policy_from_role") {
-                        cmd = "python3 detach_policy_from_role.py ${params.ROLE_NAME} ${params.POLICY_ARN}"
+                        cmd = "python3 detach_policy_from_role.py ${params.ROLE_NAMES} ${params.POLICY_ARNS}"
                     } else {
                         error("Invalid operation specified")
                     }
@@ -88,17 +88,17 @@ pipeline {
             description: 'Select the IAM operation to perform'
         )
         string(
-            name: 'ROLE_NAME',
+            name: 'ROLE_NAMES',
             defaultValue: 'ExampleRole',
             description: 'Name of the IAM role'
         )
         string(
-            name: 'POLICY_NAME',
+            name: 'POLICY_NAMES',
             defaultValue: 'ExamplePolicy',
             description: 'Name of the IAM policy'
         )
         string(
-            name: 'POLICY_ARN',
+            name: 'POLICY_ARNS',
             defaultValue: '',
             description: 'ARN of the IAM policy'
         )

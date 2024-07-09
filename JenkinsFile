@@ -16,10 +16,10 @@ pipeline {
         stage('IAM Operations') {
             steps {
                 script {
-                    // Perform the selected IAM operation
                     def cmd
                     if (params.IAM_OPERATION == "create_policy") {
-                        cmd = "python3 create_policy.py ${params.POLICY_NAME}"
+                        def policyNames = params.POLICY_NAMES.split(',')
+                        cmd = "python3 create_policy.py ${policyNames.join(' ')} policies.json"
                     } else if (params.IAM_OPERATION == "create_role") {
                         cmd = "python3 create_role.py ${params.ROLE_NAME}"
                     } else if (params.IAM_OPERATION == "delete_policy") {
@@ -33,8 +33,6 @@ pipeline {
                     } else {
                         error("Invalid operation specified")
                     }
-                    
-                    // Use withCredentials to securely set AWS credentials
                     withCredentials([[
                         $class: 'AmazonWebServicesCredentialsBinding',
                         accessKeyVariable: 'AWS_ACCESS_KEY_ID',

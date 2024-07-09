@@ -1,37 +1,43 @@
 {
   "policies": [
     {
+      "PolicyName": "Policy1",
       "PolicyDocument": {
         "Version": "2012-10-17",
         "Statement": [
           {
             "Effect": "Allow",
-            "Action": "*",
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::example_bucket"
+          }
+        ]
+      }
+    },
+    {
+      "PolicyName": "Policy2",
+      "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": "ec2:DescribeInstances",
             "Resource": "*"
           }
         ]
       }
     },
     {
+      "PolicyName": "Policy3",
       "PolicyDocument": {
         "Version": "2012-10-17",
         "Statement": [
           {
             "Effect": "Allow",
-            "Action": "s3:*",
-            "Resource": "*"
+            "Action": "dynamodb:PutItem",
+            "Resource": "arn:aws:dynamodb:us-west-2:123456789012:table/Books"
           }
         ]
       }
-    },
-    {
-      "PolicyDocument": {
-        "Version": "2012-10-17",
-        "Statement": [
-          {
-            "Effect": "Allow",
-            "Action": "ec2:*",
-            "Resource": "*"
-          }
-        ]
-      }
+    }
+  ]
+}
